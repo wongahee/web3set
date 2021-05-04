@@ -1,0 +1,97 @@
+<!Doctype html>
+<html lang = "ko">
+    <head>
+        <meta charset = "UTF-8">
+        <title>float</title>
+
+        <style>
+            .box { width: 200px; height: 70px; float: left; }
+            .bg1 { background: skyblue; }
+            .bg2 { background: dodgerblue; }
+            .bg3 { background: steelblue; }
+
+            .fl2 { width: 200px; height: 70px; float: right }
+
+            .box2 { width: 200px; height: 100px; border: 1px solid blue; }
+            .of1 { overflow: auto }   /*넘칠경우 스크롤생성*/
+            .of2 { overflow: hidden } /*넘칠경우 안보이게*/
+
+            .box3 { width: 200px; border: 1px solid blue; }
+            .of3 { white-space: nowrap; overflow: hidden;                                text-overflow: ellipsis;} /*자동줄바꿈x + 안보이게 + ...*/
+
+        </style>
+
+        <body>
+            <h1>float</h1>
+            <h2>유동배치 1</h2>
+            <div class = "box bg1"></div>
+            <div class = "box bg2"></div>
+            <div class = "box bg3"></div>
+            <p style = "clear: both; padding-top: 10px"></p> <!-- hr대신 -->
+
+            <div class = "bg1 fl2"></div>
+            <div class = "bg2 fl2"></div>
+            <div class = "bg3 fl2"></div>
+            <p style = "clear: both; padding-top: 10px"></p>
+
+            <h2>유동배치 2</h2>
+            <img src = "img/Marshal.png" width = "10%"
+                 style = "float: left; padding-right: 15px">
+            <p>한동안 접속이 되지 않아 이용자들의 우려를 샀던 국민
+            소셜네트워크서비스(SNS) 싸이월드의 월간순이용자(MAU)가
+            100만명에 달하는 것으로 나타났다. 페이스북과 인스타그램 등
+            외산 SNS에 밀려 국민SNS 자리에서 밀려났지만 '국민사진첩'
+            으로의 역할은 여전한 셈이다. 5일 통계·분석사이트
+            닐슨코리안클릭에 따르면 싸이월드의 지난 9월 순이용자수
+            (MAU, PC웹+모바일앱)는 약 98만명에 달하는 것으로
+            집계됐다. 모바일 접속자수는 67만명, PC웹 접속자수는
+            31만명을 기록해 모바일 이용자가 2배 이상 많았다.</p>
+            <p style = "clear: both; padding-top: 10px"></p>
+
+            <h2>내용넘침</h2>
+            <div class = "box2 of1">
+                한동안 접속이 되지 않아 이용자들의 우려를 샀던 국민
+                소셜네트워크서비스(SNS) 싸이월드의 월간순이용자(MAU)가
+                100만명에 달하는 것으로 나타났다. 페이스북과 인스타그램 등
+                외산 SNS에 밀려 국민SNS 자리에서 밀려났지만 '국민사진첩'
+                으로의 역할은 여전한 셈이다.
+            </div>
+            <p></p>
+            <div class = "box2 of2">
+                한동안 접속이 되지 않아 이용자들의 우려를 샀던 국민
+                소셜네트워크서비스(SNS) 싸이월드의 월간순이용자(MAU)가
+                100만명에 달하는 것으로 나타났다. 페이스북과 인스타그램 등
+                외산 SNS에 밀려 국민SNS 자리에서 밀려났지만 '국민사진첩'
+                으로의 역할은 여전한 셈이다.
+            </div>
+            <p></p>
+            <div class = "box3 of3">
+                한동안 접속이 되지 않아 이용자들의 우려를 샀던 국민
+                소셜네트워크서비스(SNS) 싸이월드의 월간순이용자(MAU)가
+                100만명에 달하는 것으로 나타났다.
+            </div>
+
+        </body>
+    </head>
+</html>
+
+<!--
+
+유동배치, float
+: html요소들의 일반적인 배치방향은 위에서 아래임 (static)
+  하지만 상황에 따라 배치방향을 다르게하여 다른 요소들과 자연스럽게
+  어울리도록 배치하고 싶을때 float속성을 사용함
+  단, float속성을 해제하려면 clear속성을 설정해야함!
+
+내용넘침
+: 내용이 컨테이너보다 큰 경우, 내용이 밖으로 넘치는 경우
+  이럴 경우 overflow속성을 지정하여 내용이 밖으로 넘어가는 것을 막음
++) overflow속성 중
+hidden은 넘치는 내용을 안보이도록 숨기고,
+auto는 넘치는 내용을 스크롤바 생성하여 볼 수 있도록해줌
+
+한편, text-overflow속성을 통해
+생략된 텍스트 부분에 대해 말줄임을 표시할 수 있음
+단, white-space속성을 통해 자동 줄바꿈 효과를 꺼두어야함
+
+-->
