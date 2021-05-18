@@ -128,13 +128,13 @@
                 <option>-읍/면/동-</option>
             </select>
         </div>
-        <p id="address"></p>
+        <p id="addr"></p>
 
         <script>
-            // 전국 시/도중 하나를 선택하면
-            // 선택한 시/도에 대한 시/군/구가 다음 select에 목록으로 출력되고
-            // 시/군/구 중 하나를 선택하면 선택한 시/군/구에 대한 읍/면/동이
-            // 다음 select에 목록으로 출력되도록 함
+            // 전국 시/도중 하나를 선택하면 선택한 시/도에 대한
+            // 시/군/구가 다음 select에 목록으로 출력되고
+            // 시/군/구 중 하나를 선택하면 선택한 시/군/구에 대한
+            // 읍/면/동이 다음 select에 목록으로 출력되도록 함
 
             // 포인트1 : 이벤트 발생 시 option 태그가 동적으로 생성
             // 포인트2 : select에서 발생가능한 이벤트는 change임
@@ -150,10 +150,27 @@
                         ['-시/군/구-','연수구','남동구','서구'],
                         ['-시/군/구-','진구','동래구','해운대구','기장군']
                       ];
+            let ymd = [ [ ['- 읍/면/동 -'] ],
+                        [ ['- 읍/면/동 -'],
+                          ['- 읍/면/동 -','논현동','대치동','삼성동'],
+                          ['- 읍/면/동 -','반포동','방배동','양재동'],
+                          ['- 읍/면/동 -','가락동','석촌동','잠실동'],
+                          ['- 읍/면/동 -','인사동','관철동','혜화동'] ],
+                        [ ['- 읍/면/동 -'],
+                          ['- 읍/면/동 -','1'],
+                          ['- 읍/면/동 -','2'],
+                          ['- 읍/면/동 -','3'],
+                          ['- 읍/면/동 -','4'],
+                          ['- 읍/면/동 -','5'] ],
+                        [ ['- 읍/면/동 -'],['a'], ['b'], ['c'] ],
+                        [ ['- 읍/면/동 -'],['가'], ['나'], ['다'], ['라'] ]
+                      ];   // 3차원 데이터
+
             // 변수 선언
             let sido = document.querySelector('#sido');
             let gugun = document.querySelector('#gugun');
             let dong = document.querySelector('#dong');
+            let addr = document.querySelector('#addr');
 
             // 첫번째 select에 change 이벤트 등록
             sido.addEventListener('change', makegu);
@@ -163,19 +180,228 @@
 
                 // for of를 이용해서 배열요소 출력
                 // createTextNode를 이용해서 텍스트 출력
-                  for(let person of persons) {
-                 //document.write("<p>" + person + "</p>");
-                for(let p in person){
-                    document.write("<p>" + person[p] + "</p>");
 
+                // 현재 선택한 시/도의 index값을 알아냄
+                let idx = sido.selectedIndex;
+
+                // 이미 등록된 목록은 제거
+                while(gugun.lastChild) {
+                    gugun.removeChild(gugun.lastChild);
+                }
+
+                // 선택한 시/도에 대한 구/군목록을 sgg배열에서 가져와
+                // 구/군select에 목록(option)으로 추가함
+                // ex) <option>강남구</option>
+                for(let gg of sgg[idx]) {
+                    let opt = document.createElement('option');
+                    let txt = document.createTextNode(gg);
+
+                    opt.appendChild(txt);
+                    gugun.appendChild(opt);
+                }
             }
 
+            // 두번째 select에 change 이벤트 등록
+            gugun.addEventListener('change', makedong);
 
+            // 선택한 시/구 데이터를 토대로 동을 출력
+            // 배열객체[시index][구index]
+            function makedong() {
+                //alert(sido.selectedIndex + '/' + gugun.selectedIndex);
+
+                let sidx = sido.selectedIndex;
+                let gidx = gugun.selectedIndex;
+
+                while(dong.lastChild)
+                    dong.removeChild(dong.lastChild);
+
+                for(let d of ymd[sidx][gidx]) {
+                    let opt = document.createElement('option');
+                    let txt = document.createTextNode(d);
+
+                    opt.appendChild(txt);
+                    dong.appendChild(opt);
+                }
+            }
+
+            // 세번째 select에 change 이벤트 등록
+            // 선택한 주소(시도/구군/읍면동)를 p요소에 출력
+            dong.addEventListener('change', makeaddr);
+
+            function makeaddr() {
+                let result = sido.value + " " + gugun.value + " " + dong.value;
+                addr.innerHTML = result;
+            }
+        </script>
+
+        <h2>동적으로 테이블 생성하기1</h2>
+        <table>
+            <colgroup>
+                <col style="">
+                <col style="">
+                <col style="">
+                <col style="">
+                <col style="">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>번호</th><th>제목</th><th>작성자</th>
+                    <th>작성일</th><th>조회</th>
+                </tr>
+            </thead>
+            <tbody>
+                <script>
+                    let result = '';
+                    for(let i = 0; i <= 20; ++i){
+                        result += "<tr><td>" +i+ "</td><td>시간은 금이라구, 친구! 진짜라구,친구! 정말이라구, 친구! 참말이라구, 친구!</td><td>siestageek</td><td>2014-05-01</td><td>777</td></tr>";
+                    }
+                    document.write(result);
+                </script>
+            </tbody>
+        </table>
+
+        <h2>동적으로 테이블 생성하기2</h2>
+        <table id="board">
+        </table>
+
+        <script>
+            // 'table -> tbody -> tr -> th/td -> 텍스트' 순으로 요소생성
+            // '텍스트 -> th/td -> tr -> tbody -> table' 순으로 자식요소 추가
+
+            // 변수선언
+            let table = document.getElementById('table');
+            let thead = document.createElement('thead');
+            let tbody = document.createElement('tbody');
+
+            // 제목 행 생성
+            // <tr><th>번호</th><th>제목</th><th>작성자</th>
+            //     <th>작성일</th><th>조회</th></tr>
+            let tr = document.createElement('tr');
+
+            let th1 = document.createElement('th');
+            let th2 = document.createElement('th');
+            let th3 = document.createElement('th');
+            let th4 = document.createElement('th');
+            let th5 = document.createElement('th');
+
+            // 제목 행에 작성할 텍스트 생성
+            let hd1 = document.createTextNode('번호');
+            let hd2 = document.createTextNode('제목');
+            let hd3 = document.createTextNode('작성자');
+            let hd4 = document.createTextNode('작성일');
+            let hd5 = document.createTextNode('조회');
+
+            // 생성한 텍스트를 제목 열에 자식요소로 추가
+            th1.appendChild(hd1);
+            th2.appendChild(hd2);
+            th3.appendChild(hd3);
+            th4.appendChild(hd4);
+            th5.appendChild(hd5);
+
+            // 생성한 제목 열을 제목 행에 자식요소로 추가
+            tr.appendChild(th1);
+            tr.appendChild(th2);
+            tr.appendChild(th3);
+            tr.appendChild(th4);
+            tr.appendChild(th5);
+
+            // 생성한 제목 행을 thead에 자식요소로 추가
+            thead.appendChild(tr);
+
+            // 생성한 thead를 table에 자식요소로 추가
+            board.appendChild(thead);
+
+            // 본문 행 생성
+            // <tr><td>1</td>
+            //     <td>시간은 금이라구, 친구! 진짜라구,친구! 정말이라구, 친구! //     참말이라구, 친구!</td>
+            //     <td>siestageek</td><td>2014-05-01</td><td>777</td></tr>
+            tr = document.createElement('tr');
+
+            let td1 = document.createElement('td');
+            let td2 = document.createElement('td');
+            let td3 = document.createElement('td');
+            let td4 = document.createElement('td');
+            let td5 = document.createElement('td');
+
+            // 본문 행에 작성할 텍스트 생성
+            let txt1 = document.createTextNode('1');
+            let txt2 = document.createTextNode('시간은 금이라구, 친구! 진짜라구,친구! 정말이라구, 친구! 참말이라구, 친구!');
+            let txt3 = document.createTextNode('siestageek');
+            let txt4 = document.createTextNode('2014-05-01');
+            let txt5 = document.createTextNode('777');
+
+            // 생성한 텍스트를 본문 열에 자식요소로 추가
+            td1.appendChild(txt1);
+            td2.appendChild(txt2);
+            td3.appendChild(txt3);
+            td4.appendChild(txt4);
+            td5.appendChild(txt5);
+
+            // 생성한 본문 열을 본문 행에 자식요소로 추가
+            tr.appendChild(td1);
+            tr.appendChild(td2);
+            tr.appendChild(td3);
+            tr.appendChild(td4);
+            tr.appendChild(td5);
+
+            // 생성한 본문 행을 tbody에 자식요소로 추가
+            tbody.appendChild(tr);
+
+            // 생성한 tbody를 table에 자식요소로 추가
+            board.appendChild(tbody);
+        </script>
+
+        <h2>동적으로 테이블 생성하기3</h2>
+        <table id="board2"></table>
+
+        <script>
+            board2 = document.getElementById('board2');
+            tbody = document.createElement('tbody');
+
+            let thval = ['번호','제목','작성자','작성일','조회수'];
+            let tdval = ['1','시간은 금이라구','wongahee','2021-05-17','777'];
+
+            tr = document.createElement('tr');
+            let th, td, txt;
+
+            // 제목 행 추가
+            for(let i = 0; i <= thval.length; ++i){
+                th = document.createElement('th');
+                txt = document.createTextNode(thval[i]);
+                th.appendChild(txt);
+                tr.appendChild(th);
+            }
+            tbody.appendChild(tr);
+
+            // 본문 행 추가
+            tr = document.createElement('tr');
+            for(let i = 0; i <= tdval.length; ++i ){
+                td = document.createElement('td');
+                txt = document.createTextNode(tdval[i]);
+                td.appendChild(txt);
+                tr.appendChild(td);
+            }
+            tbody.appendChild(tr);
+
+            // 본문행 15행 추가
+            for (let j =1; j <= 15; ++j){
+                tr = document.createElement('tr');
+                    for(let i = 0; i <= tdval.length; ++i ){
+                        td = document.createElement('td');
+                        txt = document.createTextNode(tdval[i]);
+                        td.appendChild(txt);
+                        tr.appendChild(td);
+                    }
+                    tbody.appendChild(tr);
+            }
+
+            // 생성된 tbody를 table에 추가
+            board2.appendChild(tbody);
         </script>
     </body>
 </html>
-<!--
 
+<!--
 DOM (Document Object Model)
 : html/xml 문서의 각 요소에 접근하기 위해 만들어둔 객체들의 모음
 
@@ -198,12 +424,9 @@ getElementsByName, querySelectorAll 등의 함수를 이용해야 함
 '요소명.innerHTML' 또는 '요소명.속성명'을 이용하면 됨
 - 또한, 선택한 html 요소의 스타일을 변경하려면
 '요소명.style.스타일속성'을 사용하면 됨
-
 -->
 <!--
-
 - DOM을 이용해서 문서에 새로운 요소나 속성을 추가하려면
 createElement, createAttribute, createTextNode,
 appendChild, removeChild, setAttribute등의 함수 이용
-
 -->
